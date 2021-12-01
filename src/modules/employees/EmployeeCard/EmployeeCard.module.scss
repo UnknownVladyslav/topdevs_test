@@ -1,0 +1,19 @@
+.personCardWrapper {
+  display: flex;
+  flex-direction: column;
+
+  border: 2px solid whitesmoke;
+  border-radius: 5px;
+  padding: 10px;
+  transition: .3s all ease;
+
+  p {
+    font-weight: bold;
+  }
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}

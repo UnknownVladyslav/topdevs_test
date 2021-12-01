@@ -1,0 +1,43 @@
+.App {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  max-width: 100%;
+  width: 100%;
+  background-color: #282c34;
+  font-size: calc(10px + 2vmin);
+  color: white;
+
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    padding: 0;
+  }
+
+  ul li {
+    display: flex;
+    flex-direction: column;
+    list-style: none;
+    max-width: 33.333%;
+    min-width: 30%;
+    font-size: 16px;
+  }
+
+  h2 {
+    font-size: 28px;
+  }
+
+  h3 {
+    font-size: 24px;
+  }
+}
+
+.employeesBlockWrapper {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  padding: 0 20px;
+}
+
