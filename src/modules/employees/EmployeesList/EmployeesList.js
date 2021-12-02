@@ -4,6 +4,7 @@ import EmployeesListItem from "../EmployeesListItem/EmployeesListItem";
 import {useSelector} from "react-redux";
 import PropTypes from "prop-types";
 import classes from './EmployeesList.module.scss';
+import Button from "../../../ui/Button/Button";
 
 const EmployeesList = ({employees, onResetSelectedUsers}) => {
 
@@ -20,7 +21,7 @@ const EmployeesList = ({employees, onResetSelectedUsers}) => {
         <div className={classes.titleContainer}>
             <h2>Employees</h2>
             {activeUsers.length ?
-                <button onClick={onResetSelectedUsers}>Reset all</button> :
+                <Button onClick={onResetSelectedUsers}>Reset all</Button> :
                 null
             }
         </div>

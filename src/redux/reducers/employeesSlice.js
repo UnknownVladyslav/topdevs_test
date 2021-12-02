@@ -1,4 +1,4 @@
-import {loadingStates, sliceNames, statusStates} from "../constants";
+import {loadingStates, offlineUsersList, sliceNames, statusStates} from "../constants";
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import {employeesService} from "../../modules/employees/employeesService";
 
@@ -29,6 +29,7 @@ const employeesSlice = createSlice({
         status: statusStates.ok,
         employeesList: [],
         activeEmployeesList: [],
+        isOfflineMode: false,
     },
     reducers: {
         addActiveEmployee: (state, action) => {
@@ -46,6 +47,11 @@ const employeesSlice = createSlice({
         },
         resetSelectedItems: (state) => {
             state.activeEmployeesList = [];
+        },
+        setOfflineMode: (state) => {
+            state.isOfflineMode = true;
+            state.employeesList = offlineUsersList;
+            state.status = statusStates.ok;
         }
     },
     extraReducers: {
@@ -67,6 +73,7 @@ export const {
     removeActiveEmployee,
     setLocalStorageActiveEmployee,
     resetSelectedItems,
+    setOfflineMode,
 } = employeesSlice.actions;
 
 export default employeesSlice.reducer;
