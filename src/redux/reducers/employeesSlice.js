@@ -1,6 +1,6 @@
 import {loadingStates, offlineUsersList, sliceNames, statusStates} from "../constants";
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import {employeesService} from "../../modules/employees/employeesService";
+import {employeesService} from "../../pages/employees/employeesService";
 
 export const fetchUsers = createAsyncThunk(
     sliceNames.employeesThunk,
@@ -51,7 +51,12 @@ const employeesSlice = createSlice({
         setOfflineMode: (state) => {
             state.isOfflineMode = true;
             state.employeesList = offlineUsersList;
-            state.status = statusStates.ok;
+        },
+        setOnlineMode: (state) => {
+            if (state.status === statusStates.ok) {
+                state.isOfflineMode = false;
+                state.employeesList = [];
+            }
         }
     },
     extraReducers: {
@@ -59,6 +64,7 @@ const employeesSlice = createSlice({
             state.loading = loadingStates.pending;
         },
         [fetchUsers.fulfilled]: (state, action) => {
+            state.status = statusStates.ok;
             state.loading = loadingStates.resolved;
             state.employeesList = action.payload;
         },
@@ -74,6 +80,7 @@ export const {
     setLocalStorageActiveEmployee,
     resetSelectedItems,
     setOfflineMode,
+    setOnlineMode,
 } = employeesSlice.actions;
 
 export default employeesSlice.reducer;

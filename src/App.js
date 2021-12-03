@@ -5,11 +5,11 @@ import {
     fetchUsers,
     resetSelectedItems,
     setLocalStorageActiveEmployee,
-    setOfflineMode
+    setOfflineMode, setOnlineMode
 } from "./redux/reducers/employeesSlice";
-import EmployeesList from "./modules/employees/EmployeesList/EmployeesList";
-import EmployeesSelected from "./modules/employees/EmployeesSelected/EmployeesSelected";
-import {localStorageKeys} from "./modules/employees/constants";
+import EmployeesList from "./pages/employees/EmployeesList/EmployeesList";
+import EmployeesSelected from "./pages/employees/EmployeesSelected/EmployeesSelected";
+import {localStorageKeys} from "./pages/employees/constants";
 import classes from './styles/App.module.scss';
 import Button from "./ui/Button/Button";
 
@@ -31,6 +31,11 @@ const App = () => {
 
     const turnOfflineMode = useCallback(() => {
         dispatch(setOfflineMode());
+    }, [dispatch])
+
+    const turnOnlineMode = useCallback(() => {
+        dispatch(setOnlineMode());
+        dispatch(fetchUsers());
     }, [dispatch])
 
     useEffect(() => {
@@ -65,13 +70,15 @@ const App = () => {
                     <EmployeesList
                         employees={employeesList}
                         onResetSelectedUsers={onResetSelected}
+                        setOnlineMode={turnOnlineMode}
+                        connectionStatus={status}
                     />
                     <EmployeesSelected/>
                 </div> :
                 status === statusStates.ok && <p>Loading...</p>
             }
             {
-                status === statusStates.failure &&
+                !isOfflineMode && status === statusStates.failure &&
                 <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
                     <p>Data fetching failure...</p>
                     <Button onClick={turnOfflineMode}>Offline mode</Button>

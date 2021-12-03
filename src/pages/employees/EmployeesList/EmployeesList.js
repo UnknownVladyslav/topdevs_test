@@ -3,10 +3,10 @@ import {employeeShape, titles} from "../constants";
 import EmployeesListItem from "../EmployeesListItem/EmployeesListItem";
 import {useSelector} from "react-redux";
 import PropTypes from "prop-types";
-import classes from './EmployeesList.module.scss';
 import Button from "../../../ui/Button/Button";
+import classes from './EmployeesList.module.scss';
 
-const EmployeesList = ({employees, onResetSelectedUsers}) => {
+const EmployeesList = ({employees, onResetSelectedUsers, setOnlineMode}) => {
 
     const sortedList = useMemo(() =>
         titles.map(letter => ({
@@ -14,12 +14,18 @@ const EmployeesList = ({employees, onResetSelectedUsers}) => {
         employees: employees.filter(employee => employee.firstName[0] === letter)
     })), [employees]);
 
-    const activeUsers = useSelector(state => state.employees.activeEmployeesList);
+    const {activeEmployeesList: activeUsers, isOfflineMode} = useSelector(state => state.employees);
 
     return (
     <div className={classes.listContainer}>
         <div className={classes.titleContainer}>
             <h2>Employees</h2>
+            {isOfflineMode &&
+                <div className={classes.onlineMode}>
+                    <Button onClick={setOnlineMode} style={{flexGrow: '1'}}>Online mode</Button>
+                    <span>No connection</span>
+                </div>
+            }
             {activeUsers.length ?
                 <Button onClick={onResetSelectedUsers}>Reset all</Button> :
                 null
@@ -41,6 +47,8 @@ const EmployeesList = ({employees, onResetSelectedUsers}) => {
 EmployeesList.propTypes = {
     employees: PropTypes.arrayOf(employeeShape).isRequired,
     onResetSelectedUsers: PropTypes.func.isRequired,
+    setOnlineMode: PropTypes.func.isRequired,
+    connectionStatus: PropTypes.string.isRequired,
 }
 
 export default EmployeesList;
