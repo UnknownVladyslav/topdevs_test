@@ -1,19 +1,25 @@
-import React, {useCallback, useEffect, useState} from 'react';
-import PropTypes from "prop-types";
-import {employeeShape, radioLabels} from "../constants";
-import CustomRadioInput from "../../../ui/CustomRadioInput/CustomRadioInput";
-import {addActiveEmployee, removeActiveEmployee} from "../../../redux/reducers/employeesSlice";
-import {useDispatch} from "react-redux";
+import React, {FC, useCallback, useEffect, useState} from 'react';
+import {employeesSlice} from "redux/reducers/employeesSlice";
+import {useAppDispatch} from "types/redux/hooks";
+import {radioLabels} from "pages/employees/constants";
+import {IEmployee} from "types/types";
+import CustomRadioInput from "ui/CustomRadioInput/CustomRadioInput";
 import classes from './EmployeeCard.module.scss';
 
-const EmployeeCard = ({id, firstName, lastName, activeUsers}) => {
+interface CardProps {
+    id: string,
+    firstName: string,
+    lastName: string,
+    activeUsers: IEmployee[] | [],
+}
 
-    const [isActive, setActive] = useState(false);
+const EmployeeCard: FC<CardProps> = ({id, firstName, lastName, activeUsers}) => {
 
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
+    const [isActive, setActive] = useState<boolean>(false);
 
     useEffect(() => {
-        if (activeUsers.find(user => user.id === id)) {
+        if (activeUsers.find((user: IEmployee): boolean => user.id === id)) {
             setActive(true);
         } else {
             setActive(false);
@@ -21,11 +27,11 @@ const EmployeeCard = ({id, firstName, lastName, activeUsers}) => {
     }, [activeUsers, id])
 
     const onSetActiveStatus = useCallback(() => {
-        dispatch(addActiveEmployee(id));
+        dispatch(employeesSlice.actions.addActiveEmployee(id));
     }, [dispatch, id]);
 
     const onSetInactiveStatus = useCallback(() => {
-        dispatch(removeActiveEmployee(id));
+        dispatch(employeesSlice.actions.removeActiveEmployee(id));
     }, [dispatch, id]);
 
     return (
@@ -55,16 +61,5 @@ const EmployeeCard = ({id, firstName, lastName, activeUsers}) => {
         </div>
     );
 };
-
-EmployeeCard.propTypes = {
-    firstName: PropTypes.string.isRequired,
-    lastName: PropTypes.string.isRequired,
-    id: PropTypes.string.isRequired,
-    activeUsers: PropTypes.arrayOf(employeeShape),
-}
-
-EmployeeCard.defaultProps = {
-    activeUsers: [],
-}
 
 export default EmployeeCard;

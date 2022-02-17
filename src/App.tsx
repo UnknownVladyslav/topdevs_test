@@ -1,23 +1,19 @@
-import {useCallback, useEffect, useState} from "react";
-import {loadingStates, statusStates} from "./redux/constants";
-import {useDispatch, useSelector} from "react-redux";
-import {
-    fetchUsers,
-    resetSelectedItems,
-    setLocalStorageActiveEmployee,
-    setOfflineMode, setOnlineMode
-} from "./redux/reducers/employeesSlice";
+import {FC, useCallback, useEffect, useState} from "react";
+import {statusStates} from "redux/constants";
+import {employeesSlice, EmployeesSliceState} from "redux/reducers/employeesSlice";
+import {useAppDispatch, useAppSelector} from "types/redux/hooks";
+import {localStorageKeys} from "pages/employees/constants";
+import {IEmployee} from "./types/types";
+import EmployeesSelected from "pages/employees/EmployeesSelected/EmployeesSelected";
 import EmployeesList from "./pages/employees/EmployeesList/EmployeesList";
-import EmployeesSelected from "./pages/employees/EmployeesSelected/EmployeesSelected";
-import {localStorageKeys} from "./pages/employees/constants";
-import classes from './styles/App.module.scss';
 import Button from "./ui/Button/Button";
+import classes from './styles/App.module.scss';
 
-const App = () => {
-    const [inited, setInit] = useState(false);
+const App:FC = () => {
+    const [inited, setInit] = useState<boolean>(false);
 
-    const dispatch = useDispatch();
-    const {employeesList, loading, status, activeEmployeesList, isOfflineMode} = useSelector(state => state.employees);
+    const dispatch = useAppDispatch();
+    const {employeesList, loading, status, activeEmployeesList, isOfflineMode}: EmployeesSliceState = useAppSelector(employeesSlice.selectors.employees);
 
     const setActiveUsers = useCallback(() => {
         activeEmployeesList.length &&
@@ -25,22 +21,17 @@ const App = () => {
     }, [activeEmployeesList]);
 
     const onResetSelected = useCallback(() => {
-        dispatch(resetSelectedItems());
+        dispatch(employeesSlice.actions.resetSelectedItems());
         localStorage.removeItem(localStorageKeys.activeUsers);
     }, [dispatch]);
 
     const turnOfflineMode = useCallback(() => {
-        dispatch(setOfflineMode());
-    }, [dispatch])
-
-    const turnOnlineMode = useCallback(() => {
-        dispatch(setOnlineMode());
-        dispatch(fetchUsers());
+        dispatch(employeesSlice.actions.setOfflineMode());
     }, [dispatch])
 
     useEffect(() => {
         if (!isOfflineMode) {
-            loading === loadingStates.resolved && setInit(true);
+            !loading && setInit(true);
         } else {
             setInit(true);
         }
@@ -56,10 +47,10 @@ const App = () => {
     );
 
     useEffect(() => {
-            const activeUsersFromLocalStorage = JSON.parse(localStorage.getItem(localStorageKeys.activeUsers));
+            const activeUsersFromLocalStorage: IEmployee[] = JSON.parse(localStorage.getItem(localStorageKeys.activeUsers) || '');
             activeUsersFromLocalStorage &&
-            dispatch(setLocalStorageActiveEmployee(activeUsersFromLocalStorage));
-            !isOfflineMode && dispatch(fetchUsers());
+            dispatch(employeesSlice.actions.setLocalStorageActiveEmployee(activeUsersFromLocalStorage));
+            !isOfflineMode && dispatch(employeesSlice.thunks.fetchUsers());
         },
         [dispatch, isOfflineMode])
 
@@ -70,8 +61,6 @@ const App = () => {
                     <EmployeesList
                         employees={employeesList}
                         onResetSelectedUsers={onResetSelected}
-                        setOnlineMode={turnOnlineMode}
-                        connectionStatus={status}
                     />
                     <EmployeesSelected/>
                 </div> :

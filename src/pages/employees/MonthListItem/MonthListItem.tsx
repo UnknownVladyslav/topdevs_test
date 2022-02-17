@@ -1,10 +1,13 @@
-import React from 'react';
+import React, {FC} from 'react';
+import {IEmployee} from "types/types";
 import moment from "moment";
-import PropTypes from "prop-types";
-import {employeeShape} from "../constants";
 import classes from "../EmployeesSelected/EmployeesSelected.module.scss";
 
-const MonthListItem = ({employees}) => (
+interface MonthListItemProps {
+    employees: IEmployee[]
+}
+
+const MonthListItem: FC<MonthListItemProps> = ({employees}) => (
     <>
         {employees.map(({id, firstName, lastName, dob}) =>
             <div className={classes.birthDateItem} key={id}>
@@ -14,9 +17,5 @@ const MonthListItem = ({employees}) => (
         )}
     </>
 );
-
-MonthListItem.propTypes = {
-    employees: PropTypes.arrayOf(employeeShape).isRequired,
-}
 
 export default MonthListItem;

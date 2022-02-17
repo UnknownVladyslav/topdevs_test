@@ -1,10 +1,15 @@
-import React from 'react';
-import PropTypes from "prop-types";
-import {employeeShape} from "../constants";
+import React, {FC} from 'react';
 import EmployeeCard from "../EmployeeCard/EmployeeCard";
 import classes from './EmployeesListItem.module.scss';
+import {IEmployee} from "types/types";
 
-const EmployeesListItem = ({title, employees, activeUsers}) => (
+interface ListItemProps {
+    title: string,
+    employees: IEmployee[],
+    activeUsers: IEmployee[] | [],
+}
+
+const EmployeesListItem: FC<ListItemProps> = ({title, employees, activeUsers}) => (
     <li>
         <h3>{title}</h3>
         <div className={classes.employeeListWrapper}>
@@ -23,15 +28,5 @@ const EmployeesListItem = ({title, employees, activeUsers}) => (
         </div>
     </li>
 );
-
-EmployeesListItem.propsType = {
-    title: PropTypes.string.isRequired,
-    employees: PropTypes.arrayOf(employeeShape).isRequired,
-    activeUsers: PropTypes.arrayOf(employeeShape),
-}
-
-EmployeesListItem.defaultProps = {
-    activeUser: [],
-}
 
 export default EmployeesListItem;
