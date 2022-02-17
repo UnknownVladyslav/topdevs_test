@@ -1,17 +1,17 @@
-import React, {useMemo} from 'react';
-import {useSelector} from "react-redux";
-import {months} from "../constants";
+import React, {FC, useMemo} from 'react';
+import {useAppSelector} from "types/redux/hooks";
+import {months} from "pages/employees/constants";
+import MonthListItem from "pages/employees/MonthListItem/MonthListItem";
 import moment from 'moment';
-import MonthListItem from "../MonthListItem/MonthListItem";
 import classes from './EmployeesSelected.module.scss';
 
-const EmployeesSelected = () => {
-    const activeUsers = useSelector(state => state.employees.activeEmployeesList);
+const EmployeesSelected:FC = () => {
+    const activeUsers = useAppSelector(state => state.employees.activeEmployeesList);
 
     const sortedList = useMemo( () =>
         months.map(month => ({
             month,
-            employees: activeUsers.filter(({dob}) => moment(dob).format('MMMM').includes(month))
+            employees: activeUsers.filter(({dob}: {dob: string}) => moment(dob).format('MMMM').includes(month))
         })),[activeUsers]);
 
     return (
