@@ -1,4 +1,4 @@
-import React, {FC} from 'react';
+import React, { FC } from 'react';
 
 interface RadioInputProps {
     label: string,
@@ -6,15 +6,15 @@ interface RadioInputProps {
     onChange: () => void
 }
 
-const CustomRadioInput:FC<RadioInputProps> = ({label, checked, onChange}) => {
-    return <label>
-            <input
-                type='radio'
-                checked={checked}
-                onChange={onChange}
-            />
-            {label}
-        </label>
-};
+const CustomRadioInput:FC<RadioInputProps> = ({ label, checked, onChange }) => (
+  <label>
+    <input
+      type="radio"
+      checked={checked}
+      onChange={onChange}
+    />
+    {label}
+  </label>
+);
 
 export default CustomRadioInput;

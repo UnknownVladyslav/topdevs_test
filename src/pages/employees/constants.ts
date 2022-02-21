@@ -10,4 +10,3 @@ export enum radioLabels {
 export enum localStorageKeys {
     activeUsers = 'activeUsers',
 }
-
