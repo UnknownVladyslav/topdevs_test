@@ -57,7 +57,7 @@ const App: FC = () => {
 
   useEffect(
     () => {
-      const activeUsersFromLocalStorage: IEmployee[] = JSON.parse(localStorage.getItem(localStorageKeys.activeUsers) || '');
+      const activeUsersFromLocalStorage: IEmployee[] = JSON.parse(localStorage.getItem(localStorageKeys.activeUsers) || '[]');
       if (activeUsersFromLocalStorage) dispatch(employeesSlice.actions.setLocalStorageActiveEmployee(activeUsersFromLocalStorage));
       if (!isOfflineMode) dispatch(employeesSlice.thunks.fetchUsers());
     },
